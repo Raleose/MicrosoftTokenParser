@@ -1,6 +1,7 @@
 import json
 
 from selenium.common.exceptions import TimeoutException
+from selenium.webdriver import Proxy
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
@@ -13,7 +14,7 @@ from selenium.webdriver.support.wait import WebDriverWait
 max_wait_time = 10
 
 
-def get_token_for_account(login, password):
+def get_token_for_account(login, password, proxy=None):
     capabilities = DesiredCapabilities.CHROME
     capabilities["goog:loggingPrefs"] = {"performance": "ALL"}
 
@@ -23,6 +24,8 @@ def get_token_for_account(login, password):
     options.add_argument('--ignore-certificate-errors')
     options.add_argument('no-sandbox')
     options.add_argument('--headless')
+    if proxy:
+        options.proxy = Proxy(proxy)
 
     service = Service(executable_path='C:\\chromedriver\\chromedriver.exe')
     driver = webdriver.Chrome(service=service, options=options, desired_capabilities=capabilities)
