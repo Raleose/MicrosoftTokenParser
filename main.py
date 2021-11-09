@@ -10,6 +10,8 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from selenium.webdriver.support.wait import WebDriverWait
 
+max_wait_time = 10
+
 
 def get_token_for_account(login, password):
     capabilities = DesiredCapabilities.CHROME
@@ -27,10 +29,10 @@ def get_token_for_account(login, password):
 
     try:
         def wait_element_to_be_present(by, value):
-            return WebDriverWait(driver, 10).until(EC.presence_of_element_located((by, value)))
+            return WebDriverWait(driver, max_wait_time).until(EC.presence_of_element_located((by, value)))
 
         def wait_element_to_be_clickable(by, value):
-            return WebDriverWait(driver, 10).until(EC.element_to_be_clickable((by, value)))
+            return WebDriverWait(driver, max_wait_time).until(EC.element_to_be_clickable((by, value)))
 
         driver.get("https:\\redeem.microsoft.com")
 
@@ -59,6 +61,7 @@ def get_token_for_account(login, password):
             return None
 
         print('пароль введен')
+        print(f'ждем результат проверки учетки (max = {max_wait_time} сек)...')
 
         try:
             # это вопрос оставаться ли в системе. он должен быть, но если его нет - пофиг
@@ -70,7 +73,7 @@ def get_token_for_account(login, password):
         try:
             wait_element_to_be_present(By.ID, 'blendContainer')
         except TimeoutException:
-            print('неверные учетные данные')
+            print('введены неверные учетные данные')
             return None
 
         print('учетные данные верны, парсим токен...')
